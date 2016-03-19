@@ -21,7 +21,7 @@ or
 ```
     <dependency>
         <groupId>com.dipuce</groupId>
-        <artifactId>iron-cache-play2</artifactId>
+        <artifactId>iron-cache-play2_2.10</artifactId>
         <version>2.0.0</version>
     </dependency>
 ```
