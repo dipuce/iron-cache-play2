@@ -26,4 +26,6 @@ trait IronAPI extends CacheAPI {
    def decrement(key: String, amount: Int): Option[Int]
 
    def clear()
+
+   def listCaches(page: Int = 0): Map[String, String]
 }

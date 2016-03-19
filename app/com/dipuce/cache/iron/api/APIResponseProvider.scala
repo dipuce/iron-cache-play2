@@ -14,7 +14,7 @@ object APIResponseProvider {
   def getResponse(statusCode: Int): APIResponse = {
     statusCode match {
       case 200 | 201 => SuccessfulResponse()
-      case 405 | 406 | 503 => UnsuccessfulResponse()
+      case 405 | 406 | 503 | 404 => UnsuccessfulResponse()
       case _ => FatalResponse()
     }
   }

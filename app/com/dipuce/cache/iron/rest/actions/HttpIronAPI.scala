@@ -80,7 +80,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
 
   override def remove(key: String): Unit = delete(key)
 
-  def listCaches(page: Int = 0) = {
+  override def listCaches(page: Int = 0): Map[String, String] = {
     val pageParam = ("page", page.toString)
     val holder = makeRequest(endpoints.listCacheUri).withQueryString(pageParam)
 

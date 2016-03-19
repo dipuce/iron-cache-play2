@@ -4,7 +4,7 @@ import play.api._
 import play.api.mvc._
 import play.api.Play.current
 import cache.Cache
-import com.github.tmwtmp100.cache.IronCachePlugin
+import com.dipuce.cache.iron.IronCachePlugin
 
 object Application extends Controller {
 
@@ -37,14 +37,14 @@ object Application extends Controller {
   }
 
   def cacheIncrement(key: String, incVal: Int) = Action {
-    ironPlugin.increment(key, incVal) match {
+    ironPlugin.provider.api.increment(key, incVal) match {
       case Some(amount) => Ok("Cache value increased by " + incVal + " by " + amount)
       case _ => Ok("Error with key inc-key while incrementing value.")
     }
   }
 
   def clearCache() = Action {
-    ironPlugin.clearCache()
+    ironPlugin.provider.api.clear()
     Ok("Cache has been cleared.")
   }
 
