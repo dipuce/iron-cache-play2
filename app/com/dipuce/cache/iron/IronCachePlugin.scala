@@ -1,9 +1,20 @@
 package com.dipuce.cache.iron
 
+import play.api.cache.{CacheAPI, CachePlugin}
+import play.api.Application
+import play.api.libs.json._
+import com.dipuce.cache.iron.permissions.ConfigResolverFactory
+import com.dipuce.cache.iron.provider.{DefaultIronCacheProvider, IronCacheProvider}
+
 /**
  * Created by Mike on 3/18/2016.
  */
- class IronCachePlugin {
+class IronCachePlugin(app: Application) extends CachePlugin with ConfigResolverFactory {
+
+    val provider: IronCacheProvider = new DefaultIronCacheProvider()
+
+    override def api: CacheAPI = provider.api
+
 }
 
 //
