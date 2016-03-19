@@ -15,13 +15,15 @@ import play.api.cache.CacheAPI
  * @version 2.0.0
  * Dipuce, LLC
  */
-case class IronCacheProvider(api: IronAPI, app: Application) extends ConfigResolverFactory {
+trait IronCacheProvider extends ConfigResolverFactory {
 
+  def app: Application
+  def api: IronAPI
   val cacheConfig = makeCacheConfig
 
 }
 
-case class DefaultIronCacheProvider(app: Application) extends IronCacheProvider {
+case class DefaultIronCacheProvider(override val app: Application) extends IronCacheProvider {
    override val api: IronAPI = new DefaultHttpIronAPI()
 
    class DefaultHttpIronAPI extends HttpIronAPI with CacheAPI {

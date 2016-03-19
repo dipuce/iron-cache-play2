@@ -13,9 +13,9 @@ import com.dipuce.cache.iron.provider.{DefaultIronCacheProvider, IronCacheProvid
  * @version 2.0.0
  * Dipuce, LLC
  */
-class IronCachePlugin(app: Application) extends CachePlugin with ConfigResolverFactory {
+class IronCachePlugin(override val app: Application) extends CachePlugin with ConfigResolverFactory {
 
-    val provider: IronCacheProvider = new DefaultIronCacheProvider()
+    val provider: IronCacheProvider = new DefaultIronCacheProvider(app)
 
     override def api: CacheAPI = provider.api
 

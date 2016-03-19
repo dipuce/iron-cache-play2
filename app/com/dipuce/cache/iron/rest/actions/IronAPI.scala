@@ -1,6 +1,7 @@
 package com.dipuce.cache.iron.rest.actions
 
 import com.dipuce.cache.iron.rest.RestEndpoints
+import play.api.cache.CacheAPI
 
 /**
  * Iron Cache API descriptor
@@ -10,7 +11,7 @@ import com.dipuce.cache.iron.rest.RestEndpoints
  * @version 2.0.0
  * Dipuce, LLC
  */
-trait IronAPI {
+trait IronAPI extends CacheAPI {
 
    def endpoints: RestEndpoints
 

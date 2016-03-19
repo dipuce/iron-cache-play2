@@ -25,7 +25,7 @@ trait ConfigResolverFactory extends IronPropertyKeys with UserMessages {
         oAuthToken = getProp(oAuthTokenKey),
         cacheName = getProp(cacheNameKey),
         projectId = getProp(projectIdKey),
-        apiTimeoutSeconds = getProp(timeoutSecondsKey)
+        apiTimeoutSeconds = getIntProp(timeoutSecondsKey)
     )
 
     val cacheConfigFromUser = configResolver.isValid match {
@@ -33,9 +33,9 @@ trait ConfigResolverFactory extends IronPropertyKeys with UserMessages {
       case _ =>
         Logger.warn(notAllFieldsProvided)
         val defaultConfig = configResolver.copy(
-          hostName = configResolver.hostName.getOrElse(ConfigResolver.defaultHost),
-          cacheName = configResolver.cacheName.getOrElse(ConfigResolver.defaultCache),
-          apiTimeoutSeconds = configResolver.apiTimeoutSeconds.getOrElse(ConfigResolver.defaultTimeout))
+          hostName = configResolver.hostName.orElse(ConfigResolver.defaultHost),
+          cacheName = configResolver.cacheName.orElse(ConfigResolver.defaultCache),
+          apiTimeoutSeconds = configResolver.apiTimeoutSeconds.orElse(ConfigResolver.defaultTimeout))
         defaultConfig.toConfig match {
           case None =>
             val ise = new IllegalStateException(defaultConfig.getMissingFieldErrorMsg)
@@ -50,6 +50,10 @@ trait ConfigResolverFactory extends IronPropertyKeys with UserMessages {
 
   private def getProp(name: String): Option[String] = {
     app.configuration.getString(name)
+  }
+
+  private def getIntProp(name: String): Option[Int] = {
+    app.configuration.getInt(name)
   }
 
 }

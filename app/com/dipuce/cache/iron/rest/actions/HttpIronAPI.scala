@@ -20,8 +20,6 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
 
   def authToken: String
 
-  def timeout: Int
-
   val auth = ("Authorization", s"OAuth $authToken")
   val jsonCT = (HTTP.CONTENT_TYPE,"application/json")
 
@@ -31,8 +29,8 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
      val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
 
      result match {
-       case JsNull | JsUndefined => None
-       case JsObject => Some( (result \ "value").toString() )
+       case JsNull | JsUndefined(_) => None
+       case JsObject(_) => Some( (result \ "value").toString() )
      }
 
   }
@@ -51,7 +49,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
       "value" -> typedValue,
       "expires_in" -> JsNumber(expiration)
     ))
-    val result = executeRequestWithNoResponse(holder, HttpPut.METHOD_NAME, Option(body))
+    val result = executeRequestWithNoResponse(holder, HttpPut.METHOD_NAME, Option(body.toString()))
     logOnResultError(result)
   }
 
@@ -66,7 +64,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
     val body = JsObject(Seq( ("amount", JsNumber(amount)) )).toString()
     val result = executeRequestWithResponse(holder, HttpPost.METHOD_NAME, Option(body))
     result match {
-      case JsObject => Some( (result \ "value").toString().toInt )
+      case JsObject(_) => Some( (result \ "value").toString().toInt )
       case _ => None
     }
   }
@@ -79,14 +77,17 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
     logOnResultError(result)
   }
 
+
+  override def remove(key: String): Unit = delete(key)
+
   def listCaches(page: Int = 0) = {
-    val page = ("page", page.toString)
-    val holder = makeRequest(endpoints.listCacheUri).withQueryString(page)
+    val pageParam = ("page", page.toString)
+    val holder = makeRequest(endpoints.listCacheUri).withQueryString(pageParam)
 
     val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
 
     result match {
-      case JsUndefined | JsNull => Map.empty
+      case JsUndefined(_) | JsNull => Map.empty
       case JsArray(values) =>
         values.map(j => (j \ "project_id").toString() -> (j \ "name").toString()).toMap
     }

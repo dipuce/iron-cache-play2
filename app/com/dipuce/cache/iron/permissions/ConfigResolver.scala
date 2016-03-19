@@ -39,7 +39,7 @@ case class ConfigResolver(hostName: Option[String],
 }
 
 object ConfigResolver {
-  val defaultHost = "cache-aws-us-east-1"
-  val defaultCache = "cache"
-  val defaultTimeout = 5
+  val defaultHost = Option("cache-aws-us-east-1")
+  val defaultCache = Option("cache")
+  val defaultTimeout = Option(5)
 }

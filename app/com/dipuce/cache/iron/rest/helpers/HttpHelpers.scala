@@ -2,7 +2,8 @@ package com.dipuce.cache.iron.rest.helpers
 
 import play.api.libs.ws.WS.WSRequestHolder
 import play.api.libs.json.{JsUndefined, JsValue}
-import com.dipuce.cache.iron.api.{UnsuccessfulResponse, FatalResponse, SuccessfulResponse, APIResponseProvider}
+import com.dipuce.cache.iron.api._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.Logger
 import play.api.libs.ws.WS
 import scala.concurrent.{Await, Future}
@@ -22,6 +23,8 @@ import com.dipuce.cache.iron.messaging.UserMessages
 trait HttpHelpers {
   this: UserMessages =>
 
+  def timeout: Int
+
   def auth: (String, String)
   def jsonCT: (String, String)
 
@@ -31,21 +34,21 @@ trait HttpHelpers {
 
     val fResponse = produceFutureResponseWithBody(holder, method, body)
 
-    val result = fResponse.map { response =>
+    val result: Future[JsValue] = fResponse.map { response =>
       APIResponseProvider.getResponse(response.status) match {
-        case SuccessfulResponse =>
-          Logger.debug(successApi + api)
+        case SuccessfulResponse() =>
+          Logger.debug(holder.url)
           response.json
 
-        case FatalResponse =>  // user error
+        case FatalResponse() =>  // user error
           val iae = new IllegalArgumentException( (response.json \ "msg").toString() )
           Logger.error(fatalMsg, iae)
           throw iae
 
-        case UnsuccessfulResponse =>
+        case UnsuccessfulResponse() =>
           val error = (response.json \ "msg").toString()
           Logger.warn(myError + error)
-          JsUndefined
+          JsUndefined(error)
       }
     }
 
@@ -57,18 +60,18 @@ trait HttpHelpers {
                                              body: Option[String] = None): Boolean = {
     val fResponse = produceFutureResponseWithBody(holder, method, body)
 
-    val result = fResponse.map { response =>
+    val result: Future[Boolean] = fResponse.map { response =>
       APIResponseProvider.getResponse(response.status) match {
-        case SuccessfulResponse =>
-          Logger.debug(successApi + api)
+        case SuccessfulResponse() =>
+          Logger.debug(holder.url)
           true
 
-        case FatalResponse =>  // user error
+        case FatalResponse() =>  // user error
           val iae = new IllegalArgumentException( (response.json \ "msg").toString() )
           Logger.error(fatalMsg, iae)
           throw iae
 
-        case UnsuccessfulResponse =>
+        case UnsuccessfulResponse() =>
           val error = (response.json \ "msg").toString()
           Logger.warn(myError + error)
           false
