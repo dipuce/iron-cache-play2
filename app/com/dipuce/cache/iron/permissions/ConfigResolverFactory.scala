@@ -6,7 +6,14 @@ import play.Logger
 import com.dipuce.cache.iron.messaging.UserMessages
 
 /**
- * Created by Mike on 3/18/2016.
+ * Produces a properly validated configuration. In the cases where the
+ * user does not supply all the parameters, this class will attempt to
+ * fill in the missing values with sensible defaults.
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait ConfigResolverFactory extends IronPropertyKeys with UserMessages {
 

@@ -3,8 +3,10 @@ package com.dipuce.cache.iron.rest
 /**
  * Endpoint Repository
  *
- * @author mikegarrett
+ * @author Mike Garrett
  * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 class RestEndpoints(projectAddress: String, cacheName: String) {
 

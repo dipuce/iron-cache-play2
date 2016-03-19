@@ -11,7 +11,13 @@ import org.apache.http.client.methods.{HttpPut, HttpPost}
 import com.dipuce.cache.iron.messaging.UserMessages
 
 /**
- * Created by Mike on 3/18/2016.
+ * Methods to create and manipulate HTTP reponses in a
+ * consistent way for all actions.
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait HttpHelpers {
   this: UserMessages =>

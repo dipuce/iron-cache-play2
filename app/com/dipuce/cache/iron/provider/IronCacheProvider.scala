@@ -7,7 +7,13 @@ import com.dipuce.cache.iron.rest.RestEndpoints
 import play.api.cache.CacheAPI
 
 /**
- * Created by Mike on 3/18/2016.
+ * Constructs an API instance with config properties taken from the user's application
+ * configuration file.
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 case class IronCacheProvider(api: IronAPI, app: Application) extends ConfigResolverFactory {
 

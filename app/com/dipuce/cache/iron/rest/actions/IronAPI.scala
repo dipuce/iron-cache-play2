@@ -3,7 +3,12 @@ package com.dipuce.cache.iron.rest.actions
 import com.dipuce.cache.iron.rest.RestEndpoints
 
 /**
- * Created by Mike on 3/18/2016.
+ * Iron Cache API descriptor
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait IronAPI {
 

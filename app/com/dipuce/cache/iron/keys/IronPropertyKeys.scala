@@ -1,7 +1,12 @@
 package com.dipuce.cache.iron.keys
 
 /**
- * Created by Mike on 3/18/2016.
+ * Configuration Keys
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait IronPropertyKeys {
 

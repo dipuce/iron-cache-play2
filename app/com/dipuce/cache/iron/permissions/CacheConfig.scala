@@ -1,7 +1,12 @@
 package com.dipuce.cache.iron.permissions
 
 /**
- * Created by Mike on 3/18/2016.
+ * Cache Config
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 case class CacheConfig(hostName: String,
                        cacheName: String,

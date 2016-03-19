@@ -1,7 +1,12 @@
 package com.dipuce.cache.iron.messaging
 
 /**
- * Created by Mike on 3/18/2016.
+ * Messaging presented to the user for errors or debugging
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait UserMessages {
 

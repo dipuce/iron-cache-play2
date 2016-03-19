@@ -9,7 +9,12 @@ import play.api.libs.json.JsUndefined
 import com.dipuce.cache.iron.rest.helpers.HttpHelpers
 
 /**
- * Created by Mike on 3/18/2016.
+ * An implementation of `IronAPI` centered around actual HTTP calls
+ *
+ * @author Mike Garrett
+ * @since 03/18/2016
+ * @version 2.0.0
+ * Dipuce, LLC
  */
 trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
 
