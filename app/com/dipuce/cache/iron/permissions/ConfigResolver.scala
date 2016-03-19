@@ -39,7 +39,7 @@ case class ConfigResolver(hostName: Option[String],
 }
 
 object ConfigResolver {
-  val defaultHost = Option("cache-aws-us-east-1")
+  val defaultHost = Option("https://cache-aws-us-east-1.iron.io")
   val defaultCache = Option("cache")
   val defaultTimeout = Option(5)
 }

@@ -31,6 +31,8 @@ case class DefaultIronCacheProvider(override val app: Application) extends IronC
 
      override def timeout: Int = cacheConfig.apiTimeoutSeconds
 
-     override def endpoints: RestEndpoints = new RestEndpoints(cacheConfig.hostName, cacheConfig.cacheName)
+     override def endpoints: RestEndpoints = new RestEndpoints(projectEndpoint, cacheConfig.cacheName)
+
+     private val projectEndpoint = s"${cacheConfig.hostName}/1/projects/${cacheConfig.projectId}"
    }
 }

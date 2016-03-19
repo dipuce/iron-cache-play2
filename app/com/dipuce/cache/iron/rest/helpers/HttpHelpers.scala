@@ -82,6 +82,7 @@ trait HttpHelpers {
   }
 
   protected def makeRequest(endpoint: String) = {
+    Logger.info(s"Request to $endpoint")
     WS.url(endpoint).withHeaders(auth, jsonCT)
   }
 
