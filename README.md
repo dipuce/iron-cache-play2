@@ -14,11 +14,16 @@ Add the following dependency to your Play project:
 
 ```scala
   val appDependencies = Seq(
-    "com.github.tmwtmp100" %% "iron-cache-plugin" % "1.0"
+    "com.dipuce" %% "iron-cache-play2" % "2.0.0"
   )
-  val main = play.Project(appName, appVersion, appDependencies).settings(
-    resolvers += "TMWTMP100 Repository" at "https://raw.github.com/tmwtmp100/maven/master/releases"
-  )
+```
+or
+```
+    <dependency>
+        <groupId>com.dipuce</groupId>
+        <artifactId>iron-cache-play2</artifactId>
+        <version>2.0.0</version>
+    </dependency>
 ```
 
 Build
@@ -26,11 +31,11 @@ Build
 
 To build from source, clone this repo and then build this project using SBT.
 
-    git clone https://github.com/tmwtmp100/iron-cache-plugin.git iron-cache
+    git clone https://github.com/dipuce/iron-cache-play2.git iron-cache
     cd iron-cache
-    # Assuming play is on your path
-    play compile package
-    cp plugin/target/scala-2.10/iron-cache-plugin_2.10-1.0-SNAPSHOT.jar <play project dir>/lib
+
+    mvn package
+    cp plugin/target/scala-2.10/iron-cache-play2_2.10-2.0.0-SNAPSHOT.jar <play project dir>/lib
 
 Setup
 ---
@@ -48,13 +53,14 @@ To do that, open the `application.conf` file and add a property:
     iron.project.id = "<Your iron.io project's ID>"
 
     # Optional. If not specified, these values will be used instead.
-    iron.cache.host = "cache-aws-us-east-1"
+    iron.cache.host = "https://cache-aws-us-east-1.iron.io"
     iron.cache.name = "cache"
+    iron.cache.timeout = 5 // API timeout configured in seconds
 
 The plugin must then be activated by adding a line to the `play.plugins` file. If one has not be created yet, create one
 in the conf folder of your Play application. Add this line:
 
-    1501:com.github.tmwtmp100.cache.IronCachePlugin
+    1501:com.dipuce.cache.iron.IronCachePlugin
 
 How to Use
 ---
@@ -75,17 +81,29 @@ The standard cache interface built into Play is now enabled and can be used norm
 In addition, Iron Cache has a few more capabilities built into its API. To use those:
 
 ```scala
-    import com.github.tmwtmp100.cache.IronCachePlugin
+    import com.dipuce.cache.iron.IronCachePlugin
+    
+    val app = play.api.Play.current
+    val ironPlugin = app.plugin[IronCachePlugin].get
+    val cacheAPI = ironPlugin.provider.api
 
-    # Increment an integer value (Use negative values to decrement)
-    play.api.Play.current.plugin[IronCachePlugin].get.increment("key", amount_to_increment)
+    # Increment an integer value
+    cacheAPI.increment("key", amount_to_increment)
+    
+    # Decrement an integer value
+    cacheAPI.decrement("key", amount_to_decrement)
+    
+    # List all caches
+    cacheAPI.listCaches()
 
     # Delete all items from the cache
-    play.api.Play.current.plugin[IronCachePlugin].get.clearCache()
+    cacheAPI.clear()
 ```
 
 Version
 ---
+
+2.0.0 Move from old repository. Complete rewrite for testability. First functional tests written.
 
 1.0 First Stable Version. Added Maven repository for easy use.
 
