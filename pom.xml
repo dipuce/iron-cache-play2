@@ -26,6 +26,42 @@ under the License.
     <packaging>play2</packaging>
 
     <name>Iron Cache Play2 Plugin</name>
+    <description>A play framework Cache plugin for Iron Cache from Iron.io</description>
+    <url>https://github.com/dipuce/iron-cache-play2</url>
+
+    <issueManagement>
+        <url>https://github.com/dipuce/iron-cache-play2/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/dipuce/iron-cache-play2</url>
+        <connection>scm:git:git://github.com/dipuce/iron-cache-play2.git</connection>
+        <developerConnection>scm:git:git@github.com:dipuce/iron-cache-play2.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <email>mike@dipuce.com</email>
+            <name>Mike Garrett</name>
+            <url>https://github.com/tmwtmp100</url>
+            <id>tmwtmp100</id>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Dipuce LLC</name>
+        <url>http://www.dipuce.com</url>
+    </organization>
 
     <repositories>
         <repository>
@@ -129,6 +165,21 @@ under the License.
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
