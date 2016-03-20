@@ -17,7 +17,7 @@ import com.dipuce.cache.iron.messaging.UserMessages
  *
  * @author Mike Garrett
  * @since 03/18/2016
- * @version 2.0.0
+ * @version 2.0.1
  * Dipuce, LLC
  */
 trait HttpHelpers {
@@ -30,7 +30,7 @@ trait HttpHelpers {
 
   protected def executeRequestWithResponse(holder: WSRequestHolder,
                                            method: String,
-                                           body: Option[String] = None): JsValue = {
+                                           body: Option[String] = None): Future[JsValue] = {
 
     val fResponse = produceFutureResponseWithBody(holder, method, body)
 
@@ -52,12 +52,12 @@ trait HttpHelpers {
       }
     }
 
-    getResult(result)
+    result
   }
 
   protected def executeRequestWithNoResponse(holder: WSRequestHolder,
                                              method: String,
-                                             body: Option[String] = None): Boolean = {
+                                             body: Option[String] = None): Future[Boolean] = {
     val fResponse = produceFutureResponseWithBody(holder, method, body)
 
     val result: Future[Boolean] = fResponse.map { response =>
@@ -78,17 +78,23 @@ trait HttpHelpers {
       }
     }
 
-    getResult(result)
+    result
   }
 
   protected def makeRequest(endpoint: String) = {
-    Logger.info(s"Request to $endpoint")
+    Logger.debug(s"Request to $endpoint")
     WS.url(endpoint).withHeaders(auth, jsonCT)
   }
 
-  protected def getResult[T](f: Future[T]): T = {
+  protected def getResult[T](f: Future[T], errMsg: String = genericCannot ): T = {
     val duration = Duration(timeout, "s")
-    Await.result(f, duration)
+    val result = Await.result(f, duration)
+    result match {
+      case bool: Boolean =>
+        logOnResultError(bool, errMsg)
+        result
+      case _ => result
+    }
   }
 
   protected def produceFutureResponseWithBody(holder: WSRequestHolder, method: String, body: Option[String]) = {

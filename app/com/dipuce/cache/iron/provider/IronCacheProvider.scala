@@ -12,19 +12,19 @@ import play.api.cache.CacheAPI
  *
  * @author Mike Garrett
  * @since 03/18/2016
- * @version 2.0.0
+ * @version 2.0.1
  * Dipuce, LLC
  */
 trait IronCacheProvider extends ConfigResolverFactory {
 
   def app: Application
-  def api: IronAPI
+  def api: HttpIronAPI
   val cacheConfig = makeCacheConfig
 
 }
 
 case class DefaultIronCacheProvider(override val app: Application) extends IronCacheProvider {
-   override val api: IronAPI = new DefaultHttpIronAPI()
+   override val api: HttpIronAPI = new DefaultHttpIronAPI()
 
    class DefaultHttpIronAPI extends HttpIronAPI with CacheAPI {
      override def authToken: String = cacheConfig.oAuthToken

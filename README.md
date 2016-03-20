@@ -98,10 +98,15 @@ In addition, Iron Cache has a few more capabilities built into its API. To use t
 
     # Delete all items from the cache
     cacheAPI.clear()
+    
+    # New in 2.1.0! The underlying Futures can also be accessed:
+    cacheAPI.fGet("key") // Future[Option[String]]
 ```
 
 Version
 ---
+
+2.1.0 Exposed the underlying futures in the extended interface.
 
 2.0.0 Move from old repository. Complete rewrite for testability. First functional tests written.
 

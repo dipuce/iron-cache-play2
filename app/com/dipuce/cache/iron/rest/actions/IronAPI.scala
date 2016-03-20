@@ -19,13 +19,13 @@ trait IronAPI extends CacheAPI {
 
    def set(key: String, value: Any, expiration: Int)
 
-   def delete(key: String)
+   def delete(key: String): Unit
 
    def increment(key: String, amount: Int): Option[Int]
 
    def decrement(key: String, amount: Int): Option[Int]
 
-   def clear()
+   def clear(): Unit
 
    def listCaches(page: Int = 0): Map[String, String]
 }
