@@ -1,6 +1,6 @@
 package com.dipuce.cache.iron.rest.helpers
 
-import play.api.libs.ws.WS.WSRequestHolder
+import play.api.libs.ws.WSRequestHolder
 import play.api.libs.json.{JsUndefined, JsValue}
 import com.dipuce.cache.iron.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -10,6 +10,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import org.apache.http.client.methods.{HttpPut, HttpPost}
 import com.dipuce.cache.iron.messaging.UserMessages
+import play.api.Application
 
 /**
  * Methods to create and manipulate HTTP reponses in a
@@ -24,6 +25,8 @@ trait HttpHelpers {
   this: UserMessages =>
 
   def timeout: Int
+
+  implicit def current: Application
 
   def auth: (String, String)
   def jsonCT: (String, String)

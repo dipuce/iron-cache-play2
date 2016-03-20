@@ -30,7 +30,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
      val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
 
      result.map {
-       case JsNull | JsUndefined(_) => None
+       case JsNull | JsUndefined() => None
        case jvalue@JsObject(_) => Some( (jvalue \ "value").toString() )
      }
 
@@ -86,7 +86,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
     val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
 
     result.map {
-      case JsUndefined(_) | JsNull => Map.empty
+      case JsUndefined() | JsNull => Map.empty
       case JsArray(values) =>
         values.map(j => (j \ "project_id").toString() -> (j \ "name").toString()).toMap
     }

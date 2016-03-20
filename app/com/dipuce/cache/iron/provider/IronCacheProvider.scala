@@ -27,6 +27,9 @@ case class DefaultIronCacheProvider(override val app: Application) extends IronC
    override val api: HttpIronAPI = new DefaultHttpIronAPI()
 
    class DefaultHttpIronAPI extends HttpIronAPI with CacheAPI {
+
+     override implicit def current: Application = app
+
      override def authToken: String = cacheConfig.oAuthToken
 
      override def timeout: Int = cacheConfig.apiTimeoutSeconds
