@@ -4,7 +4,7 @@ Iron Cache Plugin for Play 2.x
 Requirements
 ---
 
-* Tested with [Play 2.1.x][play]
+* Tested with [Play 2.3.x][play]
 * [Iron.io][iron] credentials
 
 Usage
@@ -14,7 +14,7 @@ Add the following dependency to your Play project:
 
 ```scala
   val appDependencies = Seq(
-    "com.dipuce" %% "iron-cache-play2" % "2.0.0"
+    "com.dipuce" %% "iron-cache-play2" % "2.2.0"
   )
 ```
 or
@@ -22,7 +22,7 @@ or
     <dependency>
         <groupId>com.dipuce</groupId>
         <artifactId>iron-cache-play2_2.10</artifactId>
-        <version>2.0.0</version>
+        <version>2.2.0</version>
     </dependency>
 ```
 
@@ -35,7 +35,7 @@ To build from source, clone this repo and then build this project using SBT.
     cd iron-cache
 
     mvn package
-    cp plugin/target/scala-2.10/iron-cache-play2_2.10-2.0.0-SNAPSHOT.jar <play project dir>/lib
+    cp plugin/target/scala-2.10/iron-cache-play2_2.10-2.2.0.jar <play project dir>/lib
 
 Setup
 ---
@@ -105,6 +105,8 @@ In addition, Iron Cache has a few more capabilities built into its API. To use t
 
 Version
 ---
+
+2.2.0 Changes to work with Play 2.3.
 
 2.1.0 Exposed the underlying futures in the extended interface.
 
