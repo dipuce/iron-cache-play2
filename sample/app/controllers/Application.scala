@@ -4,11 +4,11 @@ import play.api._
 import play.api.mvc._
 import play.api.Play.current
 import cache.Cache
-import com.dipuce.cache.iron.IronCachePlugin
+import com.dipuce.cache.iron.IronCacheModule
 
 object Application extends Controller {
 
-  private val ironPlugin = play.api.Play.current.plugin[IronCachePlugin].get
+  private val ironPlugin = play.api.Play.current.plugin[IronCacheModule].get
   
   def index = Action {
     Ok(views.html.index("Your new application is ready."))

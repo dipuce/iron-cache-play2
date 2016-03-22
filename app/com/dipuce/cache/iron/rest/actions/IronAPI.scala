@@ -1,7 +1,8 @@
 package com.dipuce.cache.iron.rest.actions
 
 import com.dipuce.cache.iron.rest.RestEndpoints
-import play.api.cache.CacheAPI
+import play.api.cache.CacheApi
+import scala.concurrent.duration.Duration
 
 /**
  * Iron Cache API descriptor
@@ -11,13 +12,13 @@ import play.api.cache.CacheAPI
  * @version 2.0.0
  * Dipuce, LLC
  */
-trait IronAPI extends CacheAPI {
+trait IronAPI extends CacheApi {
 
    def endpoints: RestEndpoints
 
    def get(key: String): Option[String]
 
-   def set(key: String, value: Any, expiration: Int)
+   def set(key: String, value: Any, expiration: Duration)
 
    def delete(key: String): Unit
 

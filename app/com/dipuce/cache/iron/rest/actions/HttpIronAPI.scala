@@ -8,6 +8,8 @@ import play.api.libs.json.JsArray
 import play.api.libs.json.JsUndefined
 import com.dipuce.cache.iron.rest.helpers.HttpHelpers
 import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.reflect.ClassTag
 
 /**
  * An implementation of `IronAPI` centered around actual HTTP calls
@@ -97,7 +99,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
 
   override def get(key: String): Option[String] = getResult(fGet(key))
 
-  override def set(key: String, value: Any, expiration: Int): Unit = getResult(fSet(key, value, expiration))
+  override def set(key: String, value: Any, expiration: Duration): Unit = getResult(fSet(key, value, expiration.toMillis.toInt))
 
   override def delete(key: String): Unit = getResult(fDelete(key))
 
@@ -108,4 +110,8 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
   override def clear(): Unit = getResult(fClear(), cannotClear)
 
   override def listCaches(page: Int): Map[String, String] = getResult(fListCaches(page))
+
+  override def getOrElse[A](key: String, expiration: Duration)(orElse: => A)(implicit ct: ClassTag[A]): A = get[A](key) getOrElse orElse
+
+  override def get[T](key: String)(implicit ct: ClassTag[T]): Option[T] = getResult(fGet(key)).map(_.asInstanceOf[T])
 }

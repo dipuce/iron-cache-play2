@@ -1,7 +1,7 @@
 package com.dipuce.cache.iron.rest.helpers
 
 import play.api.libs.ws.WSRequestHolder
-import play.api.libs.json.{JsUndefined, JsValue}
+import play.api.libs.json.{JsNull, JsUndefined, JsValue}
 import com.dipuce.cache.iron.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.Logger
@@ -51,7 +51,7 @@ trait HttpHelpers {
         case UnsuccessfulResponse() =>
           val error = (response.json \ "msg").toString()
           Logger.warn(myError + error)
-          JsUndefined(error)
+          JsNull
       }
     }
 
