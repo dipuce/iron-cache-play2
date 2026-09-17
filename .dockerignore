@@ -1,0 +1,11 @@
+.git
+.idea
+*.iml
+.idea_modules
+target
+project/target
+project/project
+sample/target
+sample/project/target
+sample/project/project
+log
