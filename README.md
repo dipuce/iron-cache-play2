@@ -125,7 +125,8 @@ Dependency updates
 `.github/workflows/scala-steward.yml` and opens pull requests for library, plugin and sbt
 updates; its policy lives in `.scala-steward.conf` (Scala 3 is pinned to the 3.3 LTS line,
 Play artifacts are grouped into one PR). Add a `STEWARD_TOKEN` secret so CI runs on the PRs
-it opens.
+it opens. Security alerts still come from Dependabot: `.github/workflows/dependency-graph.yml`
+submits the resolved sbt dependency tree to GitHub's dependency graph on every push to `master`.
 
 License
 ---

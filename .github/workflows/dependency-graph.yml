@@ -1,0 +1,26 @@
+name: Dependency graph
+
+# Submits the sbt dependency tree to GitHub's dependency graph so Dependabot
+# security alerts cover the library and sample even though Dependabot cannot
+# parse sbt builds itself. Scala Steward handles the update PRs.
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/cache-action@v6
+      - uses: scalacenter/sbt-dependency-submission@v3
