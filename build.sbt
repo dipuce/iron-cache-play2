@@ -18,6 +18,9 @@ ThisBuild / version              := "4.0.0-SNAPSHOT"
 // v-prefixed tags; this repo tags bare versions, so key both off the version above.
 ThisBuild / isSnapshot           := version.value.endsWith("-SNAPSHOT")
 ThisBuild / dynverVTagPrefix     := false
+// The Central Portal snapshot repository rejects uploaded checksum files (403 on *.md5);
+// it computes them server-side.
+ThisBuild / publish / checksums  := Nil
 ThisBuild / scalaVersion         := scala3
 ThisBuild / crossScalaVersions   := Seq(scala213, scala3)
 ThisBuild / versionScheme        := Some("early-semver")
