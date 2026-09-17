@@ -4,13 +4,23 @@ name: Release
 # sbt-ci-release: a pushed tag whose name matches the version in build.sbt
 # publishes a release; every push to master publishes a -SNAPSHOT.
 #
-# Required repository secrets (see README "Releasing"):
+# A tag can also be published on demand with "Run workflow" (workflow_dispatch),
+# which is needed for tags created before this workflow existed: the tag's
+# sources are checked out and CI_COMMIT_TAG makes sbt-ci-release treat the run
+# as a tag push.
+#
+# Required organization/repository secrets (see README "Releasing"):
 #   PGP_SECRET, PGP_PASSPHRASE, SONATYPE_USERNAME, SONATYPE_PASSWORD
 
 on:
   push:
     branches: [master, main]
     tags: ["*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish as a release (e.g. 4.0.0)"
+        required: true
 
 jobs:
   publish:
@@ -19,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,6 +39,7 @@ jobs:
       - name: Publish
         run: sbt -batch ci-release
         env:
+          CI_COMMIT_TAG: ${{ inputs.tag }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}

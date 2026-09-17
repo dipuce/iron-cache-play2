@@ -114,6 +114,9 @@ Releases go to Maven Central through the Sonatype Central Portal using
    artifacts, signs them and releases the staging repository.
 3. Bump `build.sbt` to the next `-SNAPSHOT` and commit. Pushes to `master` publish snapshots.
 
+An existing tag can also be published from the Actions tab with "Run workflow" on the
+Release workflow, giving the tag name.
+
 The workflow needs four repository secrets: `PGP_SECRET` and `PGP_PASSPHRASE` (a base64
 armored signing key, see the sbt-ci-release README), and `SONATYPE_USERNAME` /
 `SONATYPE_PASSWORD` (a Central Portal user token for the `com.dipuce` namespace).
