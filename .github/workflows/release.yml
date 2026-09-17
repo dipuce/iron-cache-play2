@@ -6,8 +6,8 @@ name: Release
 #
 # A tag can also be published on demand with "Run workflow" (workflow_dispatch),
 # which is needed for tags created before this workflow existed: the tag's
-# sources are checked out and CI_COMMIT_TAG makes sbt-ci-release treat the run
-# as a tag push.
+# sources are checked out, sbt-ci-release is supplied as a global plugin in case
+# the tag's build lacks it, and CI_COMMIT_TAG makes it treat the run as a tag push.
 #
 # Required organization/repository secrets (see README "Releasing"):
 #   PGP_SECRET, PGP_PASSPHRASE, SONATYPE_USERNAME, SONATYPE_PASSWORD
@@ -36,6 +36,11 @@ jobs:
           java-version: "17"
       - uses: sbt/setup-sbt@v1
       - uses: coursier/cache-action@v6
+      - name: Provide sbt-ci-release for tags that predate it in project/plugins.sbt
+        if: inputs.tag != ''
+        run: |
+          mkdir -p ~/.sbt/1.0/plugins
+          echo 'addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")' > ~/.sbt/1.0/plugins/ci-release.sbt
       - name: Publish
         run: sbt -batch ci-release
         env:
