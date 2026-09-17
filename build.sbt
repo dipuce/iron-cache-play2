@@ -14,6 +14,10 @@ ThisBuild / organizationHomepage := Some(url("https://www.dipuce.com"))
 // Set explicitly (overriding sbt-dynver from sbt-ci-release) so the version is
 // visible here: release commits carry the bare version and are tagged with it.
 ThisBuild / version              := "4.0.0-SNAPSHOT"
+// sbt-dynver (via sbt-ci-release) would otherwise derive these from git and expects
+// v-prefixed tags; this repo tags bare versions, so key both off the version above.
+ThisBuild / isSnapshot           := version.value.endsWith("-SNAPSHOT")
+ThisBuild / dynverVTagPrefix     := false
 ThisBuild / scalaVersion         := scala3
 ThisBuild / crossScalaVersions   := Seq(scala213, scala3)
 ThisBuild / versionScheme        := Some("early-semver")

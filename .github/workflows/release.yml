@@ -42,7 +42,14 @@ jobs:
           mkdir -p ~/.sbt/1.0/plugins
           echo 'addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")' > ~/.sbt/1.0/plugins/ci-release.sbt
       - name: Publish
-        run: sbt -batch ci-release
+        # For dispatched tags the checked-out build may predate the isSnapshot
+        # override in build.sbt, so pin it on the command line as well.
+        run: |
+          if [ -n "$CI_COMMIT_TAG" ]; then
+            sbt -batch 'set ThisBuild / isSnapshot := false' 'set ThisBuild / dynverVTagPrefix := false' ci-release
+          else
+            sbt -batch ci-release
+          fi
         env:
           CI_COMMIT_TAG: ${{ inputs.tag }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
