@@ -1,128 +1,111 @@
-Iron Cache Plugin for Play 2.x
+Iron Cache module for Play Framework
 ===
+
+A [Play Framework][play] cache module backed by [IronCache][iron] from Iron.io. It binds
+Play's standard `AsyncCacheApi` / `SyncCacheApi` (Scala and Java) to Iron Cache and exposes
+the Iron-specific extras (atomic increment/decrement, clear, list caches) through
+`com.dipuce.cache.iron.IronCacheApi`.
 
 Requirements
 ---
 
-* Tested with [Play 2.1.x - 2.3.x][play]
+* Play 3.0.x
+* Scala 2.13 or Scala 3 (cross-published for both)
+* Java 17 or 21
 * [Iron.io][iron] credentials
-* Scala 2.10
+
+> Looking for the Play 2.1–2.3 / Scala 2.10 plugin? Use version `3.0.1`
+> (`"com.dipuce" %% "iron-cache-play2" % "3.0.1"`), the last release of that line.
+> Play removed the plugin API it was built on in 2.4, so 4.x is a rewrite against the
+> module/DI API. The artifact keeps its historical `iron-cache-play2` name.
 
 Usage
 ---
 
-Add the following dependency to your Play project:
+Add the dependency to your Play project:
 
 ```scala
-  val appDependencies = Seq(
-    "com.dipuce" %% "iron-cache-play2" % "3.0.1"
-  )
-```
-or
-```
-    <dependency>
-        <groupId>com.dipuce</groupId>
-        <artifactId>iron-cache-play2_2.10</artifactId>
-        <version>3.0.1</version>
-    </dependency>
+libraryDependencies += "com.dipuce" %% "iron-cache-play2" % "4.0.0"
 ```
 
-Build
----
+The module enables itself. Configure your credentials in `conf/application.conf`:
 
-To build from source, clone this repo and then build this project using SBT.
+```hocon
+# Only needed if another cache module (ehcache, caffeine) is also on the classpath:
+# play.modules.disabled += "play.api.cache.ehcache.EhCacheModule"
 
-    git clone https://github.com/dipuce/iron-cache-play2.git iron-cache
-    cd iron-cache
+iron {
+  token      = "<your Iron.io token>"
+  project.id = "<your Iron.io project id>"
 
-    mvn package
-    cp plugin/target/scala-2.10/iron-cache-play2_2.10-3.0.1.jar <play project dir>/lib
+  # Optional; these are the defaults.
+  cache {
+    host    = "https://cache-aws-us-east-1.iron.io"
+    name    = "cache"
+    timeout = 5 seconds   # request timeout, and the await timeout of SyncCacheApi
+  }
+}
+```
 
-Setup
----
-
-To use, first the default cache has to be disabled. Then your specific iron.io credentials must also be added.
-To do that, open the `application.conf` file and add a property:
-
-    # Disable Default Cache
-    ehcacheplugin=disabled
-
-    #Iron Cache Properties
-
-    # Required. Get these settings from the iron.io dashboard
-    iron.token      = "<Your iron.io token>"
-    iron.project.id = "<Your iron.io project's ID>"
-
-    # Optional. If not specified, these values will be used instead.
-    iron.cache.host = "https://cache-aws-us-east-1.iron.io"
-    iron.cache.name = "cache"
-    iron.cache.timeout = 5 // API timeout configured in seconds
-
-The plugin must then be activated by adding a line to the `play.plugins` file. If one has not be created yet, create one
-in the conf folder of your Play application. Add this line:
-
-    1501:com.dipuce.cache.iron.IronCachePlugin
-
-How to Use
----
-
-The standard cache interface built into Play is now enabled and can be used normally.
+Then inject a cache as usual:
 
 ```scala
-    # Get a value
-    Cache.get("key")
+import javax.inject.Inject
+import scala.concurrent.duration._
+import play.api.cache.AsyncCacheApi
+import com.dipuce.cache.iron.IronCacheApi
 
-    # Set a value, set a value with an expiration time in milliseconds
-    Cache.set("key", "value")
-    Cache.set("key", "value", 3600)
+class MyService @Inject() (cache: AsyncCacheApi, iron: IronCacheApi) {
+  cache.set("greeting", "hello", 1.hour)
+  cache.get[String]("greeting")            // Future[Option[String]]
 
-    # Remove an item from the cache
-    Cache.remove("key")
-```
-In addition, Iron Cache has a few more capabilities built into its API. To use those:
-
-```scala
-    import com.dipuce.cache.iron.IronCachePlugin
-    
-    val app = play.api.Play.current
-    val ironPlugin = app.plugin[IronCachePlugin].get
-    val cacheAPI = ironPlugin.provider.api
-
-    # Increment an integer value
-    cacheAPI.increment("key", amount_to_increment)
-    
-    # Decrement an integer value
-    cacheAPI.decrement("key", amount_to_decrement)
-    
-    # List all caches
-    cacheAPI.listCaches()
-
-    # Delete all items from the cache
-    cacheAPI.clear()
-    
-    # New in 2.1.0! The underlying Futures can also be accessed:
-    cacheAPI.fGet("key") // Future[Option[String]]
+  iron.increment("hits")                   // Future[Option[Long]], atomic on the server
+  iron.decrement("stock", 3)
+  iron.clear()                             // same as removeAll()
+  iron.listCaches()                        // Future[Map[cacheName, projectId]]
+}
 ```
 
-Version
+Iron Cache stores JSON, so values must be JSON-representable: `String`, `Boolean`, any
+numeric primitive, `BigDecimal`, or a play-json `JsValue`. Anything else fails the returned
+future with an `IllegalArgumentException`. Unexpected responses from Iron.io fail with an
+`IronCacheException(status, message)`.
+
+Building
 ---
 
-2.2.0 Changes to work with Play 2.3. (Experimental)
+The build is sbt and cross-compiles for every supported Scala version:
 
-2.1.0 Exposed the underlying futures in the extended interface.
+```sh
+sbt +test          # run the tests on Scala 2.13 and Scala 3
+sbt +publishLocal  # publish both artifacts to ~/.ivy2/local
+sbt sample/run     # start the sample app (needs IRON_TOKEN and IRON_PROJECT_ID)
+```
 
-2.0.0 Move from old repository. Complete rewrite for testability. First functional tests written.
+No local Scala or sbt? Use the Dockerfile:
 
-1.0 First Stable Version. Added Maven repository for easy use.
+```sh
+docker build -t iron-cache-play2 .
+docker run --rm iron-cache-play2                     # sbt +test
+docker run --rm iron-cache-play2 sbt +publishLocal
+```
 
-0.2 Added LOTS of error checking. Implemented and tested the Iron specific functions.
+Mount `-v iron-cache-coursier:/root/.cache/coursier -v iron-cache-sbt:/root/.sbt` to keep
+downloaded dependencies between runs.
 
-0.1 Initial Version. Consider it very rough (no error checking).
+Tests run offline against an in-process stub of the Iron Cache REST API
+(`src/test/scala/.../IronCacheStub.scala`), so no credentials are needed.
 
-Contact
+Sample
 ---
 
-If you like this plugin and want to contribute, feel free to submit a pull request!
+`sample/` is a minimal Play application wired to the module. Set `IRON_TOKEN` and
+`IRON_PROJECT_ID`, run `sbt sample/run`, and hit the routes in `sample/conf/routes`.
 
-[play]: http://www.playframework.com/ "Play Framework"
-[iron]: http://www.iron.io            "Iron.io"
+License
+---
+
+Apache License 2.0. See `LICENSE`.
+
+[play]: https://www.playframework.com/
+[iron]: https://www.iron.io/

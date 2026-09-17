@@ -1,7 +1,21 @@
+# IDE
 /.idea
 /*.iml
 /.idea_modules
-project/project
-project/target
-/target
+/.bsp
+/.metals
+/.bloop
+/.vscode
+/sample/.bsp
+
+# sbt
+target/
+project/project/
+project/target/
+sample/project/project/
+sample/project/target/
+sample/logs/
+
+# misc
 /log
+.DS_Store

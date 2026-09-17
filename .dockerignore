@@ -1,5 +1,10 @@
 .git
+.github
 .idea
+.bsp
+.metals
+.bloop
+.vscode
 *.iml
 .idea_modules
 target
@@ -8,4 +13,5 @@ project/project
 sample/target
 sample/project/target
 sample/project/project
+sample/logs
 log

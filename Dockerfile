@@ -1,25 +1,27 @@
-# Build environment for iron-cache-play2 (Play 2.1 / Scala 2.10 / Maven).
+# Build environment for iron-cache-play2 (Play 3 / Scala 2.13 + 3 / sbt).
 #
-# Scala 2.10 needs a Java 8 runtime, so the image pins JDK 8 rather than a
-# modern LTS. Nothing has to be installed on the host except Docker.
+# Nothing has to be installed on the host except Docker.
 #
 #   docker build -t iron-cache-play2 .
-#   docker run --rm iron-cache-play2                 # runs `mvn package`
-#   docker run --rm -it iron-cache-play2 bash        # interactive shell
+#   docker run --rm iron-cache-play2                    # cross-builds and tests every Scala version
+#   docker run --rm iron-cache-play2 sbt +publishLocal  # publish both artifacts to ~/.ivy2/local
+#   docker run --rm -it iron-cache-play2 bash           # interactive shell
 #
-# Mount ~/.m2 to reuse downloaded dependencies between runs:
-#   docker run --rm -v "$HOME/.m2:/root/.m2" iron-cache-play2
+# Reuse downloaded dependencies between runs by mounting the caches:
+#   docker run --rm -v iron-cache-coursier:/root/.cache/coursier \
+#                   -v iron-cache-sbt:/root/.sbt iron-cache-play2
 
-FROM maven:3.9-eclipse-temurin-8
+FROM sbtscala/scala-sbt:eclipse-temurin-17.0.20_8_1.13.0_3.3.8
 
 WORKDIR /app
 
-# Resolve dependencies and plugins in their own layer so source edits do not
-# trigger a full re-download.
-COPY pom.xml ./
-RUN mvn -B -q dependency:go-offline || true
+# Resolve sbt, plugins and library dependencies in their own layer so that
+# source edits do not trigger a full re-download.
+COPY build.sbt ./
+COPY project/build.properties project/plugins.sbt ./project/
+RUN sbt -batch "+update" "sample/update"
 
-COPY app ./app
-COPY test ./test
+COPY src ./src
+COPY sample ./sample
 
-CMD ["mvn", "-B", "-DskipTests", "package"]
+CMD ["sbt", "-batch", "+test"]

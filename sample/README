@@ -1,4 +1,5 @@
-Sample Application Utilizing Iron Cache Plugin (iron.io)
-=====================================
+Sample Play 3 application using the Iron Cache module
+=====================================================
 
-Refer to this project when including the plugin into your application.
+Refer to this project when adding the module to your own application.
+Set IRON_TOKEN and IRON_PROJECT_ID, then run `sbt sample/run` from the repository root.
