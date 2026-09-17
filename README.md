@@ -119,7 +119,9 @@ Release workflow, giving the tag name.
 
 The workflow needs four repository secrets: `PGP_SECRET` and `PGP_PASSPHRASE` (a base64
 armored signing key, see the sbt-ci-release README), and `SONATYPE_USERNAME` /
-`SONATYPE_PASSWORD` (a Central Portal user token for the `com.dipuce` namespace).
+`SONATYPE_PASSWORD` (a Central Portal user token for the `com.dipuce` namespace). Snapshot
+publishing must be enabled on the namespace in the Portal ("Enable SNAPSHOTs"), or snapshot
+uploads are rejected with 403.
 
 Dependency updates
 ---
