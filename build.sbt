@@ -11,7 +11,9 @@ val scalaTestVer = "3.2.20"
 ThisBuild / organization         := "com.dipuce"
 ThisBuild / organizationName     := "Dipuce LLC"
 ThisBuild / organizationHomepage := Some(url("https://www.dipuce.com"))
-ThisBuild / version              := "4.0.0"
+// Set explicitly (overriding sbt-dynver from sbt-ci-release) so the version is
+// visible here: release commits carry the bare version and are tagged with it.
+ThisBuild / version              := "4.0.0-SNAPSHOT"
 ThisBuild / scalaVersion         := scala3
 ThisBuild / crossScalaVersions   := Seq(scala213, scala3)
 ThisBuild / versionScheme        := Some("early-semver")

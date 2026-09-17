@@ -102,6 +102,31 @@ Sample
 `sample/` is a minimal Play application wired to the module. Set `IRON_TOKEN` and
 `IRON_PROJECT_ID`, run `sbt sample/run`, and hit the routes in `sample/conf/routes`.
 
+Releasing
+---
+
+Releases go to Maven Central through the Sonatype Central Portal using
+[sbt-ci-release](https://github.com/sbt/sbt-ci-release), driven by `.github/workflows/release.yml`:
+
+1. Set the release version in `build.sbt` (`ThisBuild / version := "4.1.0"`) and commit.
+2. Tag that commit with the same version (`git tag -a 4.1.0 -m "4.1.0"`) and push the tag.
+   The workflow runs `sbt ci-release`, which cross-publishes the Scala 2.13 and Scala 3
+   artifacts, signs them and releases the staging repository.
+3. Bump `build.sbt` to the next `-SNAPSHOT` and commit. Pushes to `master` publish snapshots.
+
+The workflow needs four repository secrets: `PGP_SECRET` and `PGP_PASSPHRASE` (a base64
+armored signing key, see the sbt-ci-release README), and `SONATYPE_USERNAME` /
+`SONATYPE_PASSWORD` (a Central Portal user token for the `com.dipuce` namespace).
+
+Dependency updates
+---
+
+[Scala Steward](https://github.com/scala-steward-org/scala-steward) runs weekly from
+`.github/workflows/scala-steward.yml` and opens pull requests for library, plugin and sbt
+updates; its policy lives in `.scala-steward.conf` (Scala 3 is pinned to the 3.3 LTS line,
+Play artifacts are grouped into one PR). Add a `STEWARD_TOKEN` secret so CI runs on the PRs
+it opens.
+
 License
 ---
 
