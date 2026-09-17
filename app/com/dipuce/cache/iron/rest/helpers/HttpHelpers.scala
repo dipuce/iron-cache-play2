@@ -8,7 +8,6 @@ import play.Logger
 import play.api.libs.ws.WS
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
-import org.apache.http.client.methods.{HttpPut, HttpPost}
 import com.dipuce.cache.iron.messaging.UserMessages
 
 /**
@@ -101,8 +100,8 @@ trait HttpHelpers {
     body match {
       case None => holder.execute(method)
       case Some(jsBody) => method match {
-        case HttpPost.METHOD_NAME => holder.post(jsBody)
-        case HttpPut.METHOD_NAME => holder.put(jsBody)
+        case "POST" => holder.post(jsBody)
+        case "PUT" => holder.put(jsBody)
         case _ => holder.execute(method)
       }
     }

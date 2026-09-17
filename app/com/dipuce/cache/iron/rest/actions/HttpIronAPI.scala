@@ -2,8 +2,6 @@ package com.dipuce.cache.iron.rest.actions
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import com.dipuce.cache.iron.messaging.UserMessages
-import org.apache.http.protocol.HTTP
-import org.apache.http.client.methods._
 import play.api.libs.json.JsArray
 import play.api.libs.json.JsUndefined
 import com.dipuce.cache.iron.rest.helpers.HttpHelpers
@@ -22,12 +20,12 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
   def authToken: String
 
   val auth = ("Authorization", s"OAuth $authToken")
-  val jsonCT = (HTTP.CONTENT_TYPE,"application/json")
+  val jsonCT = ("Content-Type", "application/json")
 
   def fGet(key: String): Future[Option[String]] = {
      val api = s"${endpoints.cacheUri}/$key"
      val holder = makeRequest(api)
-     val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
+     val result = executeRequestWithResponse(holder, "GET")
 
      result.map {
        case JsNull | JsUndefined(_) => None
@@ -50,20 +48,20 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
       "value" -> typedValue,
       "expires_in" -> JsNumber(expiration)
     ))
-    val result = executeRequestWithNoResponse(holder, HttpPut.METHOD_NAME, Option(body.toString()))
+    val result = executeRequestWithNoResponse(holder, "PUT", Option(body.toString()))
     result
   }
 
   def fClear(): Future[Boolean] = {
     val holder = makeRequest(endpoints.clearCacheUri)
-    val result = executeRequestWithNoResponse(holder, HttpPost.METHOD_NAME)
+    val result = executeRequestWithNoResponse(holder, "POST")
     result
   }
 
   def fIncrement(key: String, amount: Int): Future[Option[Int]] = {
     val holder = makeRequest(endpoints.incrementUri(key))
     val body = JsObject(Seq( ("amount", JsNumber(amount)) )).toString()
-    val result = executeRequestWithResponse(holder, HttpPost.METHOD_NAME, Option(body))
+    val result = executeRequestWithResponse(holder, "POST", Option(body))
     result.map {
       case jvalue@JsObject(_) => Some((jvalue \ "value").toString().toInt)
       case _ => None
@@ -74,7 +72,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
 
   def fDelete(key: String): Future[Boolean] = {
     val holder = makeRequest(s"${endpoints.cacheUri}/$key")
-    val result = executeRequestWithNoResponse(holder, HttpDelete.METHOD_NAME)
+    val result = executeRequestWithNoResponse(holder, "DELETE")
     result
   }
 
@@ -83,7 +81,7 @@ trait HttpIronAPI extends IronAPI with UserMessages with HttpHelpers {
     val pageParam = ("page", page.toString)
     val holder = makeRequest(endpoints.listCacheUri).withQueryString(pageParam)
 
-    val result = executeRequestWithResponse(holder, HttpGet.METHOD_NAME)
+    val result = executeRequestWithResponse(holder, "GET")
 
     result.map {
       case JsUndefined(_) | JsNull => Map.empty

@@ -15,7 +15,7 @@ Add the following dependency to your Play project:
 
 ```scala
   val appDependencies = Seq(
-    "com.dipuce" %% "iron-cache-play2" % "2.1.0"
+    "com.dipuce" %% "iron-cache-play2" % "3.0.1"
   )
 ```
 or
@@ -23,7 +23,7 @@ or
     <dependency>
         <groupId>com.dipuce</groupId>
         <artifactId>iron-cache-play2_2.10</artifactId>
-        <version>2.1.0</version>
+        <version>3.0.1</version>
     </dependency>
 ```
 
@@ -36,7 +36,7 @@ To build from source, clone this repo and then build this project using SBT.
     cd iron-cache
 
     mvn package
-    cp plugin/target/scala-2.10/iron-cache-play2_2.10-2.1.0.jar <play project dir>/lib
+    cp plugin/target/scala-2.10/iron-cache-play2_2.10-3.0.1.jar <play project dir>/lib
 
 Setup
 ---
