@@ -4,7 +4,7 @@
 // suite against every Scala version; `sbt +publishLocal` publishes both.
 
 val playVersion  = "3.0.11"
-val scala213     = "2.13.18"
+val scala213     = "3.9.0"
 val scala3       = "3.3.8"
 val scalaTestVer = "3.2.20"
 
