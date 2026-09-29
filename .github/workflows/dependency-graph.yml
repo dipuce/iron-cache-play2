@@ -24,3 +24,6 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - uses: coursier/cache-action@v8
       - uses: scalacenter/sbt-dependency-submission@v3
+        with:
+          # Compiler and scaladoc classpaths; never on any runtime or test classpath.
+          configs-ignore: scala-tool scala-doc-tool

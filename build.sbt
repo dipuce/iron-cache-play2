@@ -7,6 +7,33 @@ val playVersion  = "3.0.11"
 val scala213     = "2.13.18"
 val scala3       = "3.3.8"
 val scalaTestVer = "3.2.20"
+val jacksonVer   = "2.18.11"
+val logbackVer   = "1.5.38"
+val lz4Ver       = "1.11.4"
+
+// Patches Play 3.0.11's vulnerable pins for this build only; overrides never reach the POM.
+// jackson-module-scala rejects a databind of another minor version, so Jackson moves as one.
+ThisBuild / dependencyOverrides ++= Seq(
+  "com.fasterxml.jackson.core"       %  "jackson-annotations"            % jacksonVer,
+  "com.fasterxml.jackson.core"       %  "jackson-core"                   % jacksonVer,
+  "com.fasterxml.jackson.core"       %  "jackson-databind"               % jacksonVer,
+  "com.fasterxml.jackson.dataformat" %  "jackson-dataformat-cbor"        % jacksonVer,
+  "com.fasterxml.jackson.datatype"   %  "jackson-datatype-jdk8"          % jacksonVer,
+  "com.fasterxml.jackson.datatype"   %  "jackson-datatype-jsr310"        % jacksonVer,
+  "com.fasterxml.jackson.module"     %  "jackson-module-parameter-names" % jacksonVer,
+  "com.fasterxml.jackson.module"     %% "jackson-module-scala"           % jacksonVer,
+  "ch.qos.logback"                   %  "logback-classic"                % logbackVer,
+  "ch.qos.logback"                   %  "logback-core"                   % logbackVer,
+  "at.yawk.lz4"                      %  "lz4-java"                       % lz4Ver
+)
+
+// play-test's browser-testing stack is unused here and carries most Dependabot alerts.
+val browserTestExclusions = Seq(
+  ExclusionRule("org.seleniumhq.selenium"),
+  ExclusionRule("io.fluentlenium"),
+  ExclusionRule("net.sourceforge.htmlunit"),
+  ExclusionRule("org.htmlunit")
+)
 
 ThisBuild / organization         := "com.dipuce"
 ThisBuild / organizationName     := "Dipuce LLC"
@@ -52,7 +79,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "org.playframework" %% "play-cache" % playVersion,
       "org.playframework" %% "play-ws"    % playVersion,
-      "org.playframework" %% "play-test"              % playVersion  % Test,
+      ("org.playframework" %% "play-test"             % playVersion  % Test).excludeAll(browserTestExclusions: _*),
       "org.playframework" %% "play-pekko-http-server" % playVersion  % Test,
       "org.playframework" %% "play-ahc-ws" % playVersion  % Test,
       "org.playframework" %% "play-guice"  % playVersion  % Test,
