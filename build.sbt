@@ -95,5 +95,6 @@ lazy val sample = (project in file("sample"))
   .settings(
     name := "iron-cache-sample",
     publish / skip := true,
-    libraryDependencies ++= Seq(guice, ws)
+    libraryDependencies ++= Seq(guice, ws),
+    excludeDependencies ++= browserTestExclusions
   )
