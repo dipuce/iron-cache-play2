@@ -7,7 +7,7 @@ val playVersion  = "3.0.11"
 val scala213     = "2.13.18"
 val scala3       = "3.3.8"
 val scalaTestVer = "3.2.20"
-val jacksonVer   = "2.18.11"
+val jacksonVer   = "2.22"
 val logbackVer   = "1.5.38"
 val lz4Ver       = "1.11.4"
 
