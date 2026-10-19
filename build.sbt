@@ -3,7 +3,7 @@
 // Cross-built for Scala 2.13 and Scala 3 (LTS). `sbt +test` runs the test
 // suite against every Scala version; `sbt +publishLocal` publishes both.
 
-val playVersion  = "3.0.11"
+val playVersion  = "3.0.12"
 val scala213     = "2.13.18"
 val scala3       = "3.3.8"
 val scalaTestVer = "3.2.20"
