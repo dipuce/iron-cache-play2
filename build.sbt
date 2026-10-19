@@ -7,14 +7,14 @@ val playVersion  = "3.0.11"
 val scala213     = "2.13.18"
 val scala3       = "3.3.8"
 val scalaTestVer = "3.2.20"
-val jacksonVer   = "2.22.3"
+val jacksonVer   = "2.22.4"
 val jacksonAnnotationsVer = "2.22"
 val logbackVer   = "1.6.5"
 val lz4Ver       = "1.12.0"
 
 // Patches Play 3.0.11's vulnerable pins for this build only; overrides never reach the POM.
 // jackson-module-scala rejects a databind of another minor version, so Jackson moves as one.
-// jackson-annotations publishes minor versions only (2.22, no 2.22.3).
+// jackson-annotations publishes minor versions only (2.22, no 2.22.4).
 ThisBuild / dependencyOverrides ++= Seq(
   "com.fasterxml.jackson.core"       %  "jackson-annotations"            % jacksonAnnotationsVer,
   "com.fasterxml.jackson.core"       %  "jackson-core"                   % jacksonVer,
