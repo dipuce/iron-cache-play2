@@ -9,7 +9,7 @@ val scala3       = "3.3.9"
 val scalaTestVer = "3.2.20"
 val jacksonVer   = "2.22.4"
 val jacksonAnnotationsVer = "2.22"
-val logbackVer   = "1.6.5"
+val logbackVer   = "1.6.6"
 val lz4Ver       = "1.12.0"
 
 // Patches Play 3.0.12's vulnerable pins for this build only; overrides never reach the POM.
