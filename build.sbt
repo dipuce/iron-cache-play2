@@ -14,7 +14,7 @@ val lz4Ver       = "1.12.0"
 
 // Patches Play 3.0.12's vulnerable pins for this build only; overrides never reach the POM.
 // jackson-module-scala rejects a databind of another minor version, so Jackson moves as one.
-// jackson-annotations publishes minor versions only (2.22, no 2.22.4).
+// jackson-annotations publishes minor versions only (2.22, no 2.23.0).
 ThisBuild / dependencyOverrides ++= Seq(
   "com.fasterxml.jackson.core"       %  "jackson-annotations"            % jacksonAnnotationsVer,
   "com.fasterxml.jackson.core"       %  "jackson-core"                   % jacksonVer,
